@@ -6,7 +6,7 @@ FROM alpine:latest
 
 ENV MNT_POINT /var/s3
 ENV IAM_ROLE=none
-ENV S3_REGION 'us-west-2'
+ENV S3_REGION ''
 
 VOLUME /var/s3
 

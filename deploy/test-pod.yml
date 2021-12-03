@@ -6,11 +6,12 @@ spec:
   containers:
     - image: nginx
       name: s3-test-container
-      securityContext:
-        privileged: true
+#      securityContext:
+#        privileged: true
       volumeMounts:
         - name: mntdatas3fs
           mountPath: /var/s3
+#          mountPropagation: HostToContainer
       livenessProbe:
         exec:
           command: ["ls", "/var/s3"]

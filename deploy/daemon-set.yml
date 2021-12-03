@@ -27,10 +27,11 @@ spec:
             capabilities:
               add:
                 - SYS_ADMIN
-          # use ALL  entries in the config map as environment variables
           env:
+            - name: S3_REGION
+              value: "eu-central-1"
             - name: S3_BUCKET
-              value: "oregon-s3-qisim"
+              value: "cortex-demo-data"
             - name: AWS_KEY
               value: "AKIAUQ5WJS3Y2WPI2FKJ"
             - name: AWS_SECRET_KEY

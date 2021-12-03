@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: s3-provider
+  name: s3-provider
+  namespace: s3fuse
+spec:
+  selector:
+    matchLabels:
+      app: s3-provider
+  template:
+    metadata:
+      labels:
+        app: s3-provider
+    spec:
+      containers:
+        - name: s3fuse
+          imagePullPolicy: "Always"
+          image: containersolution/s3fs-fuse-pod
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh","-c","umount -f /var/s3"]
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - SYS_ADMIN
+          # use ALL  entries in the config map as environment variables
+          env:
+            - name: S3_BUCKET
+              value: "oregon-s3-qisim"
+            - name: AWS_KEY
+              value: "AKIAUQ5WJS3Y2WPI2FKJ"
+            - name: AWS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: s3fuse-credentials-secret
+                  key: secret-access-key
+          volumeMounts:
+            - name: devfuse
+              mountPath: /dev/fuse
+            - name: mntdatas3fs
+              mountPath: /var/s3
+              mountPropagation: Bidirectional
+      volumes:
+        - name: devfuse
+          hostPath:
+            path: /dev/fuse
+        - name: mntdatas3fs
+          hostPath:
+            path: /mnt/data-s3-fs
